@@ -15,6 +15,16 @@ print(coordinate_1)
 def distance(x1, x2):
     return np.sqrt(np.sum((x1-x2)**2))
 
+class KMean():
+
+    def __init__(self, K = 5, max_iterations = 100, steps= True):
+        self.K = K
+        self.max_iterations = max_iterations
+        self.steps = steps
+
+        self.clusters = [[] for i in range(self.K)]
+        self.centroids = []
+
 
 
 # import pandas as pd
