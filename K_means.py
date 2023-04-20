@@ -153,22 +153,3 @@ print(input.shape)
 
 model = KMean()
 model.predict(input)
-
-
-# sample_data = np.random.randn(100,2)
-# print(sample_data)
-# print(type(sample_data))
-# model = KMean()
-# model.predict(sample_data)
-
-
-# import pandas as pd
-#
-# # Replace "file.csv" with the name of your CSV file
-# df = pd.read_csv("test.csv")
-#
-# # Check if any columns have empty values
-# if df.isnull().values.any():
-#     print("The CSV file has empty values.")
-# else:
-#     print("The CSV file does not have any empty values.")
