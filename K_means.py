@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 df = pd.read_csv(r'ieeedata.csv')
 
@@ -19,11 +20,40 @@ class Data_arrangement():
         self.coordiante_4 = np.array(dataframe['coordinate4'].tolist())
         self.coordiante_5 = np.array(dataframe['coordinate5'].tolist())
 
+        self.input_data = []
+        self.null_data = []
+
+        for i in range(0, len(self.coordinate_1)):
+            if self.coordinate_1[i] == 0 or self.coordinate_2[i] == 0:
+                self.null_data.append([self.coordinate_1[i], self.coordinate_2[i]])
+            else:
+                self.input_data.append([self.coordinate_1[i], self.coordinate_2[i]])
+
+        self.input_data = np.array(self.input_data)
+
+        plt.figure(figsize = (16,5))
+        plt.subplot(1,2,1)
+        sns.histplot(dataframe['coordinate1'])
+        plt.subplot(1,2,2)
+        sns.histplot(dataframe['coordinate2'])
+        plt.show()
+        sns.boxplot(dataframe['coordinate2'])
+
+        coordinate_1_ptile_25 = dataframe['coordinate1'].quant
+        coordinate_1_ptile_75 = dataframe['coordinate1'].quant
+
+        upper_limit = coordinate_1_ptile_75 -1.5*iqr
+
+        new_df = dataframe[dataframe['coordinate1']<upper_limit]
+        print(new_df.shape)
 
 
 
 
 
+
+    def get_data(self):
+        return self.input_data
 
 def distance(x1, x2):
     return np.sqrt(np.sum((x1-x2)**2))
@@ -108,24 +138,12 @@ class KMean():
 
 
 
-input_data = []
-null_data = []
-outlier_data = []
-print(len(coordinate_1))
-for i in range(0, len(coordinate_1)):
-    if coordinate_1[i] ==0 or coordinate_2[i] ==0:
-        null_data.append([coordinate_1[i], coordinate_2[i]])
-    else:
-        input_data.append([coordinate_1[i], coordinate_2[i]])
-print(len(null_data))
-print(len(input_data))
-
-input_data = np.array(input_data)
-
 test = Data_arrangement(df)
+input= test.get_data()
+print(input.shape)
 
 model = KMean()
-model.predict(input_data)
+model.predict(input)
 
 
 # sample_data = np.random.randn(100,2)
