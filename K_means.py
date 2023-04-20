@@ -10,7 +10,20 @@ coordinate_3 = df['coordinate3'].tolist()
 coordinate_4 = df['coordinate4'].tolist()
 coordinate_5 = df['coordinate5'].tolist()
 
-print(coordinate_1)
+class Data_arrangement():
+    def __init__(self, dataframe):
+        self.dataframe = dataframe
+        self.coordinate_1 = np.array(dataframe['coordinate1'].tolist())
+        self.coordinate_2 = np.array(dataframe['coordinate2'].tolist())
+        self.coordinate_3 = np.array(dataframe['coordinate3'].tolist())
+        self.coordiante_4 = np.array(dataframe['coordinate4'].tolist())
+        self.coordiante_5 = np.array(dataframe['coordinate5'].tolist())
+
+
+
+
+
+
 
 def distance(x1, x2):
     return np.sqrt(np.sum((x1-x2)**2))
@@ -51,7 +64,7 @@ class KMean():
 
 
     def get_cluster_labels(self, clusters):
-        labels = np.empty(self.n_samples)
+        labels = np.empty(self.samples)
 
         for cluster_index, cluster in enumerate(clusters):
             for sample_index in cluster:
@@ -93,12 +106,33 @@ class KMean():
             ax.scatter(*point, marker = "x", color = 'black', linewidth = 2)
         plt.show()
 
-sample_data = np.random.randn(100,2)
-print(sample_data)
+
+
+input_data = []
+null_data = []
+outlier_data = []
+print(len(coordinate_1))
+for i in range(0, len(coordinate_1)):
+    if coordinate_1[i] ==0 or coordinate_2[i] ==0:
+        null_data.append([coordinate_1[i], coordinate_2[i]])
+    else:
+        input_data.append([coordinate_1[i], coordinate_2[i]])
+print(len(null_data))
+print(len(input_data))
+
+input_data = np.array(input_data)
+
+test = Data_arrangement(df)
+
 model = KMean()
-model.predict(sample_data)
+model.predict(input_data)
 
 
+# sample_data = np.random.randn(100,2)
+# print(sample_data)
+# print(type(sample_data))
+# model = KMean()
+# model.predict(sample_data)
 
 
 # import pandas as pd
