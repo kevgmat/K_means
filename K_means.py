@@ -85,16 +85,18 @@ class KMean():
         for i in range(self.max_iterations):
             self.clusters = self.create_clusters(self.centroids)
 
-            if self.steps:
-                self.plot()
+            # if self.steps:
+            #     self.plot()
 
             old_centroids = self.centroids
             self.centroids = self.get_centroids(self.clusters)
 
             if self.is_converged(old_centroids, self.centroids):
+                print(self.clusters)
                 break
-            if self.steps:
-                self.plot()
+
+            # if self.steps:
+            #     self.plot()
 
         return self.get_cluster_labels(self.clusters)
 
@@ -131,23 +133,23 @@ class KMean():
         distances = [distance(old_centroids[i], centroids[i]) for i in range(self.K)]
         return sum(distances) == 0
 
-    def plot(self):
+    # def plot(self):
 
-        fig, ax = plt.subplots(figsize = (12,8))
-
-        for i, index in enumerate(self.clusters):
-            point = self.input_data[index].T
-            ax.scatter(*point)
-
-        for point in self.centroids:
-            ax.scatter(*point, marker = "x", color = 'black', linewidth = 2)
-        plt.show()
+        # fig, ax = plt.subplots(figsize = (12,8))
+        #
+        # for i, index in enumerate(self.clusters):
+        #     point = self.input_data[index].T
+        #     ax.scatter(*point)
+        #
+        # for point in self.centroids:
+        #     ax.scatter(*point, marker = "x", color = 'black', linewidth = 2)
+        # plt.show()
 
 
 
 test = Data_arrangement(df)
 input= test.get_data()
-input = input[:,[0,1]]
+input = input[:,[0,1,2,3,4]]
 print(input)
 print(input.shape)
 
