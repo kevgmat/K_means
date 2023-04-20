@@ -14,46 +14,53 @@ coordinate_5 = df['coordinate5'].tolist()
 class Data_arrangement():
     def __init__(self, dataframe):
         self.dataframe = dataframe
-        self.coordinate_1 = np.array(dataframe['coordinate1'].tolist())
-        self.coordinate_2 = np.array(dataframe['coordinate2'].tolist())
-        self.coordinate_3 = np.array(dataframe['coordinate3'].tolist())
-        self.coordiante_4 = np.array(dataframe['coordinate4'].tolist())
-        self.coordiante_5 = np.array(dataframe['coordinate5'].tolist())
+        self.coordinate_1 = dataframe['coordinate1'].tolist()
+        self.coordinate_2 = dataframe['coordinate2'].tolist()
+        self.coordinate_3 = dataframe['coordinate3'].tolist()
+        self.coordinate_4 = dataframe['coordinate4'].tolist()
+        self.coordinate_5 = dataframe['coordinate5'].tolist()
+        self.main_input_list = []
+        for i in range(0, len(coordinate_1)):
+            self.main_input_list.append([self.coordinate_1[i],
+                                         self.coordinate_2[i],
+                                         self.coordinate_3[i],
+                                         self.coordinate_4[i],
+                                         self.coordinate_5[i]])
+        # print(self.main_input_list)
 
-        self.input_data = []
         self.null_data = []
-
-        for i in range(0, len(self.coordinate_1)):
-            if self.coordinate_1[i] == 0 or self.coordinate_2[i] == 0:
-                self.null_data.append([self.coordinate_1[i], self.coordinate_2[i]])
+        self.removed_zeroes = []
+        for i in range(0, len(self.main_input_list)):
+            if 0 in self.main_input_list[i]:
+                self.null_data.append(self.main_input_list[i])
             else:
-                self.input_data.append([self.coordinate_1[i], self.coordinate_2[i]])
+                self.removed_zeroes.append(self.main_input_list[i])
 
-        self.input_data = np.array(self.input_data)
+        self.cleaned_data = self.clean(self.removed_zeroes)
+        self.cleaned_data = np.array(self.cleaned_data)
 
-        plt.figure(figsize = (16,5))
-        plt.subplot(1,2,1)
-        sns.histplot(dataframe['coordinate1'])
-        plt.subplot(1,2,2)
-        sns.histplot(dataframe['coordinate2'])
-        plt.show()
-        sns.boxplot(dataframe['coordinate2'])
+    def clean(self, main_input_list):
+        v = [self.coordinate_1, self.coordinate_2, self.coordinate_3, self.coordinate_4, self.coordinate_5]
+        clean = [[],[],[],[],[]]
+        for i in range(0, 5):
+            q1, q3 = np.percentile(v[i], [25,60])
+            upper_bound = q3 + 1.5*(q3- q1)
+            clean[i] = [x for x in main_input_list if x[i] <= upper_bound]
 
-        coordinate_1_ptile_25 = dataframe['coordinate1'].quant
-        coordinate_1_ptile_75 = dataframe['coordinate1'].quant
+        unique = []
+        for item in clean[0]:
+            if item not in unique:
+                unique.append(item)
 
-        upper_limit = coordinate_1_ptile_75 -1.5*iqr
-
-        new_df = dataframe[dataframe['coordinate1']<upper_limit]
-        print(new_df.shape)
-
-
-
-
-
+        # Next, check if each unique element in the first list is also in the other four lists
+        intersection = []
+        for item in unique:
+            if item in clean[1] and item in clean[2] and item in clean[3] and item in clean[4]:
+                intersection.append(item)
+        return intersection
 
     def get_data(self):
-        return self.input_data
+        return self.cleaned_data
 
 def distance(x1, x2):
     return np.sqrt(np.sum((x1-x2)**2))
@@ -140,6 +147,8 @@ class KMean():
 
 test = Data_arrangement(df)
 input= test.get_data()
+input = input[:,[0,1]]
+print(input)
 print(input.shape)
 
 model = KMean()
